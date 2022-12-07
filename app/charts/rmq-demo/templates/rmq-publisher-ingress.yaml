@@ -1,5 +1,9 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
+metadata:
+  name: rmq-publisher-ingress
+  labels:
+    app: rmq-publisher
 spec:
   rules:
   - http:
