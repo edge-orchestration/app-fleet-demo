@@ -8,7 +8,7 @@ metadata:
   annotations:
     cloud.google.com/neg: '{"exposed_ports": {"80":{}}}'
 spec:
-  type: ClusterIP
+  type: NodePort
   selector:
     app: rmq-publisher
   ports:
