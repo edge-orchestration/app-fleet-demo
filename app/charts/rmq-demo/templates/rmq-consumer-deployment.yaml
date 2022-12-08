@@ -11,14 +11,14 @@ spec:
   template:                      # This deployment will create a set of pods using the configurations in this template
     metadata:
       labels:                    # The labels that will be applied to all of the pods in this deployment
-        app: rmq-consumer 
+        app: rmq-consumer
     spec:                        # Spec for the container which will run in the Pod
       containers:
       - name: rmq-consumer
         image: {{ .Values.consumer.imageRepository }}:{{ .Values.consumer.imageTag }}
         imagePullPolicy: Always
         env:
-        - name: RABBITMQ_HOST 
+        - name: RABBITMQ_HOST
           valueFrom:
             secretKeyRef:
               name: rabbitmqserver-default-user
@@ -28,12 +28,12 @@ spec:
             secretKeyRef:
               name: rabbitmqserver-default-user
               key: port
-        - name: RABBITMQ_USER 
+        - name: RABBITMQ_USER
           valueFrom:
             secretKeyRef:
               name: rabbitmqserver-default-user
               key: username
-        - name: RABBITMQ_PASS 
+        - name: RABBITMQ_PASS
           valueFrom:
             secretKeyRef:
               name: rabbitmqserver-default-user
@@ -41,3 +41,7 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 4002  # Should match the port number that the Go application listens on
+        readinessProbe:
+          httpGet:
+            path: /consumer
+            port: 4002
