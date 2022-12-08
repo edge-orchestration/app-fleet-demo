@@ -5,8 +5,6 @@ metadata:
   name: rmq-publisher
   labels:
     app: rmq-publisher
-  annotations:
-    cloud.google.com/neg: '{"exposed_ports": {"80":{}}}'
 spec:
   type: NodePort
   selector:
