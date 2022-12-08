@@ -4,6 +4,7 @@ metadata:
   name: rmq-publisher-ingress
   annotations:
     ingress.kubernetes.io/rewrite-target: /
+    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
   labels:
     app: rmq-publisher
 spec:
