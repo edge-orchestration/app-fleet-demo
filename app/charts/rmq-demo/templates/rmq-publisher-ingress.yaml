@@ -17,5 +17,5 @@ spec:
           service:
             name: rmq-publisher
             port:
-              # name: rmq-publisher
+              name: rmq-publisher
               number: 4001
