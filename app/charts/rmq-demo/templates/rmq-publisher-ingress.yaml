@@ -15,7 +15,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: rmq-publisher
+            # name: rmq-publisher
             port:
               name: rmq-publisher
               number: 4001
