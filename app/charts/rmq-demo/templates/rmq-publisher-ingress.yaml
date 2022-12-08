@@ -5,6 +5,7 @@ metadata:
   annotations:
     ingress.kubernetes.io/rewrite-target: /
     traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+    ingress.kubernetes.io/ssl-redirect: "false"
   labels:
     app: rmq-publisher
 spec:
