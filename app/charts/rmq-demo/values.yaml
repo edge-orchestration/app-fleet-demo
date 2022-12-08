@@ -13,4 +13,4 @@ consumer:
 rabbitmqServer:
   persistence:
     storageClassName:
-    storage: 10Gi
+    storage: 3Gi
