@@ -26,7 +26,6 @@ func main() {
 	flag.Parse()
 	mux := http.NewServeMux()
 	mux.HandleFunc("/publisher", homeHandler)
-	mux.HandleFunc("/publisher/publish", publishHandler)
 	fileServer := http.FileServer(http.Dir("./assets/"))
 	mux.Handle("/publisher/assets/", http.StripPrefix("/publisher/assets", fileServer))
 
@@ -40,20 +39,6 @@ func main() {
 }
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
-	ts, err := template.ParseFiles("./home.page.tmpl")
-	if err != nil {
-		log.Println(err.Error())
-		http.Error(w, "Internal Server Error", 500)
-		return
-	}
-	err = ts.Execute(w, nil)
-	if err != nil {
-		log.Println(err.Error())
-		http.Error(w, "Internal Server Error", 500)
-	}
-}
-
-func publishHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		err := r.ParseForm()
 		if err != nil {
@@ -65,9 +50,22 @@ func publishHandler(w http.ResponseWriter, r *http.Request) {
 		contentValue := r.PostForm.Get("content")
 		publish(queueValue, contentValue)
 		http.Redirect(w, r, "/publisher", http.StatusSeeOther)
+	} else if r.Method == "GET" {
+		ts, err := template.ParseFiles("./home.page.tmpl")
+		if err != nil {
+			log.Println(err.Error())
+			http.Error(w, "Internal Server Error", 500)
+			return
+		}
+		err = ts.Execute(w, nil)
+		if err != nil {
+			log.Println(err.Error())
+			http.Error(w, "Internal Server Error", 500)
+		}
 	} else {
 		http.Error(w, "Internal Server Error", 500)
 	}
+
 }
 
 func publish(queueValue, contentValue string) {
