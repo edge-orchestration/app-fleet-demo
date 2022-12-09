@@ -14,3 +14,10 @@ rabbitmqServer:
   persistence:
     storageClassName:
     storage: 10Gi
+  resources:
+    requests:
+      cpu: 900m
+      memory: 2Gi
+    limits:
+      cpu: 900m
+      memory: 2Gi
