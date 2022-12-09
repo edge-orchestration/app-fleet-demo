@@ -2,13 +2,13 @@ build:
 	docker build -t rmq-consumer . --target production
 
 tag:
-	docker tag rmq-consumer debbabi/rmq-consumer:0.2.0-rc.3
+	docker tag rmq-consumer debbabi/rmq-consumer:0.2.0-rc.4
 
 tag-latest:
 	docker tag rmq-consumer debbabi/rmq-consumer:latest
 
 push:
-	docker push debbabi/rmq-consumer:0.2.0-rc.3
+	docker push debbabi/rmq-consumer:0.2.0-rc.4
 
 push-latest:
 	docker push debbabi/rmq-consumer:latest

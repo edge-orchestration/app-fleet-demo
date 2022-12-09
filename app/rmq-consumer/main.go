@@ -31,7 +31,7 @@ func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/consumer", home)
 	fileServer := http.FileServer(http.Dir("./assets/"))
-	mux.Handle("/consumer/assets/", http.StripPrefix("/assets", fileServer))
+	mux.Handle("/consumer/assets/", http.StripPrefix("/consumer/assets", fileServer))
 
 	// start web server
 	log.Println("Starting RabbitMQ Demo app - Consumer on: 4002")
