@@ -25,9 +25,9 @@ func main() {
 	flag.StringVar(&RabbitMq_Pass, "rabbitmq-pass", LookupEnvOrString("RABBITMQ_PASS", RabbitMq_Pass), "RabbitMQ Password")
 	flag.Parse()
 	mux := http.NewServeMux()
-	mux.HandleFunc("/publisher", homeHandler)
+	mux.HandleFunc("/", home)
 	fileServer := http.FileServer(http.Dir("./assets/"))
-	mux.Handle("/publisher/assets/", http.StripPrefix("/publisher/assets", fileServer))
+	mux.Handle("/assets/", http.StripPrefix("/assets", fileServer))
 
 	// start web server
 	log.Println("Starting RabbitMQ Demo app - Publisher on: 4001")
@@ -38,7 +38,7 @@ func main() {
 	log.Fatal(err)
 }
 
-func homeHandler(w http.ResponseWriter, r *http.Request) {
+func home(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		err := r.ParseForm()
 		if err != nil {
@@ -49,8 +49,8 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 		queueValue := r.PostForm.Get("queue")
 		contentValue := r.PostForm.Get("content")
 		publish(queueValue, contentValue)
-		http.Redirect(w, r, "/publisher", http.StatusSeeOther)
-	} else if r.Method == "GET" {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+	} else {
 		ts, err := template.ParseFiles("./home.page.tmpl")
 		if err != nil {
 			log.Println(err.Error())
@@ -62,10 +62,7 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 			log.Println(err.Error())
 			http.Error(w, "Internal Server Error", 500)
 		}
-	} else {
-		http.Error(w, "Internal Server Error", 500)
 	}
-
 }
 
 func publish(queueValue, contentValue string) {
