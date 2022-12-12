@@ -39,13 +39,13 @@ func home(w http.ResponseWriter, r *http.Request) {
 	ts, err := template.ParseFiles("./home2.page.tmpl")
 	if err != nil {
 		log.Println(err.Error())
-		http.Error(w, "Internal Server Error", 500)
+		http.Error(w, "Internal Server Error: "+err.Error(), 500)
 		return
 	}
 	err = ts.Execute(w, nil)
 	if err != nil {
 		log.Println(err.Error())
-		http.Error(w, "Internal Server Error", 500)
+		http.Error(w, "Internal Server Error: "+err.Error(), 500)
 	}
 	/*
 		if r.Method == "POST" {

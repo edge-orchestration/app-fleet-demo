@@ -46,18 +46,21 @@ func home(w http.ResponseWriter, r *http.Request) {
 	ts, err := template.ParseFiles("./home.page.tmpl")
 	if err != nil {
 		log.Println(err.Error())
-		http.Error(w, "Internal Server Error", 500)
+		http.Error(w, "Internal Server Error: "+err.Error(), 500)
 		return
 	}
-	msgsValues := Consume()
+	msgsValues, err := Consume()
+	if err != nil {
+		http.Error(w, "Internal Server Error: "+err.Error(), 500)
+	}
 	err = ts.Execute(w, &templateData{Messages: msgsValues})
 	if err != nil {
 		log.Println(err.Error())
-		http.Error(w, "Internal Server Error", 500)
+		http.Error(w, "Internal Server Error: "+err.Error(), 500)
 	}
 }
 
-func Consume() *[]string {
+func Consume() (*[]string, error) {
 	conn, err := amqp.Dial(RabbitMQInstanceConnectionPath())
 	if err != nil {
 		fmt.Println(err)
@@ -81,6 +84,10 @@ func Consume() *[]string {
 		false,
 		nil,
 	)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
 	msgsValues := []string{}
 	go func() {
 		for d := range msgs {
@@ -89,7 +96,7 @@ func Consume() *[]string {
 		}
 	}()
 	log.Println("All messages received.")
-	return &msgsValues
+	return &msgsValues, nil
 }
 
 func LookupEnvOrString(key string, defaultVal string) string {
@@ -100,5 +107,5 @@ func LookupEnvOrString(key string, defaultVal string) string {
 }
 
 func RabbitMQInstanceConnectionPath() string {
-	return fmt.Sprintf("amqp://%s:%s@%s:%s/", RabbitMq_User, RabbitMq_Pass, RabbitMq_Host, RabbitMq_Port)
+	return fmt.Sprintf("amqp://%s:%s@%s:%s?heartbeat=30&connection_timeout=120", RabbitMq_User, RabbitMq_Pass, RabbitMq_Host, RabbitMq_Port)
 }
