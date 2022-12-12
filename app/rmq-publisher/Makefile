@@ -5,13 +5,13 @@ build:
 	docker build -t rmq-publisher . --target production
 
 tag:
-	docker tag rmq-publisher debbabi/rmq-publisher:0.2.0-rc.4
+	docker tag rmq-publisher debbabi/rmq-publisher:0.2.0-rc.5
 
 tag-latest:
 	docker tag rmq-publisher debbabi/rmq-publisher:latest
 
 push:
-	docker push debbabi/rmq-publisher:0.2.0-rc.4
+	docker push debbabi/rmq-publisher:0.2.0-rc.5
 
 push-latest:
 	docker push debbabi/rmq-publisher:latest

@@ -2,13 +2,10 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
-
-	"github.com/streadway/amqp"
 )
 
 var (
@@ -39,19 +36,7 @@ func main() {
 }
 
 func home(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "POST" {
-		err := r.ParseForm()
-		if err != nil {
-			log.Println(err.Error())
-			http.Error(w, "Internal Server Error", 500)
-			return
-		}
-		queueValue := r.PostForm.Get("queue")
-		contentValue := r.PostForm.Get("content")
-		publish(queueValue, contentValue)
-		//http.Redirect(w, r, "/publisher/", http.StatusSeeOther)
-	}
-	ts, err := template.ParseFiles("./home.page.tmpl")
+	ts, err := template.ParseFiles("./home2.page.tmpl")
 	if err != nil {
 		log.Println(err.Error())
 		http.Error(w, "Internal Server Error", 500)
@@ -62,9 +47,34 @@ func home(w http.ResponseWriter, r *http.Request) {
 		log.Println(err.Error())
 		http.Error(w, "Internal Server Error", 500)
 	}
-
+	/*
+		if r.Method == "POST" {
+			err := r.ParseForm()
+			if err != nil {
+				log.Println(err.Error())
+				http.Error(w, "Internal Server Error", 500)
+				return
+			}
+			queueValue := r.PostForm.Get("queue")
+			contentValue := r.PostForm.Get("content")
+			publish(queueValue, contentValue)
+			//http.Redirect(w, r, "/publisher/", http.StatusSeeOther)
+		}
+		ts, err := template.ParseFiles("./home.page.tmpl")
+		if err != nil {
+			log.Println(err.Error())
+			http.Error(w, "Internal Server Error", 500)
+			return
+		}
+		err = ts.Execute(w, nil)
+		if err != nil {
+			log.Println(err.Error())
+			http.Error(w, "Internal Server Error", 500)
+		}
+	*/
 }
 
+/*
 func publish(queueValue, contentValue string) {
 	log.Printf("Publish to queue [%s] message [%s]\n", queueValue, contentValue)
 	conn, err := amqp.Dial(RabbitMQInstanceConnectionPath())
@@ -113,13 +123,14 @@ func publish(queueValue, contentValue string) {
 	log.Printf("Successfully Published Message to Queue [%s]\n", queueValue)
 }
 
+func RabbitMQInstanceConnectionPath() string {
+	return fmt.Sprintf("amqp://%s:%s@%s:%s/", RabbitMq_User, RabbitMq_Pass, RabbitMq_Host, RabbitMq_Port)
+}
+*/
+
 func LookupEnvOrString(key string, defaultVal string) string {
 	if val, ok := os.LookupEnv(key); ok {
 		return val
 	}
 	return defaultVal
-}
-
-func RabbitMQInstanceConnectionPath() string {
-	return fmt.Sprintf("amqp://%s:%s@%s:%s/", RabbitMq_User, RabbitMq_Pass, RabbitMq_Host, RabbitMq_Port)
 }
