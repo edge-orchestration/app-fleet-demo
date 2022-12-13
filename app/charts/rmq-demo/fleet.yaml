@@ -8,3 +8,11 @@ targetCustomizations:
   clusterSelector:
     matchLabels:
       provider: gke
+- name: openshift
+  helm:
+    values:
+      ingress:
+        host: afm-demo.apps.os1.openshift.edge-clusters.net
+  clusterSelector:
+    matchLabels:
+      provider: openshift

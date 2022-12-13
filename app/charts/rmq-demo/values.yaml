@@ -14,3 +14,6 @@ rabbitmqServer:
   persistence:
     storageClassName:
     storage: 3Gi
+
+ingress:
+  host: ""
