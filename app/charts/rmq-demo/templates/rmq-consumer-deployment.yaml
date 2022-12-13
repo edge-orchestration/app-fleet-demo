@@ -18,4 +18,25 @@ spec:
         image: {{ .Values.consumer.imageRepository }}:{{ .Values.consumer.imageTag }}
         imagePullPolicy: Always
         ports:
-          - containerPort: 4002  # Should match the port number that the Go application listens on
+        - containerPort: 4002  # Should match the port number that the Go application listens on
+        env:
+        - name: RABBITMQ_HOST 
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmqserver-default-user
+              key: host
+        - name: RABBITMQ_PORT
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmqserver-default-user
+              key: port
+        - name: RABBITMQ_USER 
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmqserver-default-user
+              key: username
+        - name: RABBITMQ_PASS 
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmqserver-default-user
+              key: password
