@@ -7,8 +7,6 @@ import (
 	"net/http"
 	"os"
 	"text/template"
-
-	"github.com/streadway/amqp"
 )
 
 var (
@@ -49,54 +47,14 @@ func home(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal Server Error: "+err.Error(), 500)
 		return
 	}
-	msgsValues, err := Consume()
 	if err != nil {
 		http.Error(w, "Internal Server Error: "+err.Error(), 500)
 	}
-	err = ts.Execute(w, &templateData{Messages: msgsValues})
+	err = ts.Execute(w, &templateData{Messages: nil})
 	if err != nil {
 		log.Println(err.Error())
 		http.Error(w, "Internal Server Error: "+err.Error(), 500)
 	}
-}
-
-func Consume() (*[]string, error) {
-	conn, err := amqp.Dial(RabbitMQInstanceConnectionPath())
-	if err != nil {
-		fmt.Println(err)
-		panic(err)
-	}
-	defer conn.Close()
-
-	ch, err := conn.Channel()
-	if err != nil {
-		fmt.Println(err)
-		panic(err)
-	}
-	defer ch.Close()
-
-	msgs, err := ch.Consume(
-		"TestQueue",
-		"",
-		true,
-		false,
-		false,
-		false,
-		nil,
-	)
-	if err != nil {
-		fmt.Println(err)
-		return nil, err
-	}
-	msgsValues := []string{}
-	go func() {
-		for d := range msgs {
-			msgsValues = append(msgsValues, fmt.Sprintf("%s", d.Body))
-			log.Printf("Received Message: %s\n", d.Body)
-		}
-	}()
-	log.Println("All messages received.")
-	return &msgsValues, nil
 }
 
 func LookupEnvOrString(key string, defaultVal string) string {
