@@ -19,6 +19,10 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 4001  # Should match the port number that the Go application listens on
+        readinessProbe:
+          httpGet:
+            path: /publisher
+            port: 4001  
         env:
         - name: RABBITMQ_HOST 
           valueFrom:
