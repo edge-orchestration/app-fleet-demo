@@ -21,3 +21,6 @@ spec:
                 name: rmq-consumer
                 port:
                   number: 4002
+      {{ if .Values.ingress.host }}
+      host: {{ .Values.ingress.host | quote }}
+      {{- end }} 
