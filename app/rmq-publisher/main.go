@@ -55,6 +55,7 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func publishHandler(w http.ResponseWriter, r *http.Request) {
+	log.Println("Publishing a message to RabbitMQ...")
 	if r.Method == "POST" {
 		err := r.ParseForm()
 		if err != nil {
