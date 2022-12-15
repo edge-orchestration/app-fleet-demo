@@ -2,7 +2,7 @@ targetCustomizations:
 - name: microk8s
   clusterSelector:
     matchLabels:
-      provider: microk8s
+      provider: kind
   helm:
     values:
       rabbitmqServer:
