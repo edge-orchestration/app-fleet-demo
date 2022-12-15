@@ -8,7 +8,7 @@ spec:
   paths: 
     - rabbitmq-operator
   repo: "https://github.com/edge-orchestration/app-fleet-demo"
-  branch: 0.2.0
+  branch: "0.2.1"
   targets: 
     - name: manufacturing-edge-clusters
       clusterSelector:
