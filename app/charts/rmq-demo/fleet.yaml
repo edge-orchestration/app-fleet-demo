@@ -17,6 +17,13 @@ targetCustomizations:
       rabbitmqServer:
         persistence:
           storageClassName: premium-rwo
+        resources:
+          limits:
+            cpu: 200m
+            memory: 500Mi
+          requests:
+            cpu: 200m
+            memory: 500Mi
       ingress:        
         annotations:
           kubernetes.io/ingress.global-static-ip-name: "gke-rmq-static-ip"
