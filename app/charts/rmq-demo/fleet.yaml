@@ -1,4 +1,16 @@
 targetCustomizations:
+- name: microk8s
+  clusterSelector:
+    matchLabels:
+      provider: microk8s
+  helm:
+    values:
+      rabbitmqServer:
+        resources:
+          requests:
+            memory: 2.5Gi
+          limits:
+            memory: 2.5Gi
 - name: gke
   clusterSelector:
     matchLabels:

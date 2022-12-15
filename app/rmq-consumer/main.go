@@ -93,12 +93,15 @@ func Consume() (*[]string, error) {
 		return nil, err
 	}
 	msgsValues := []string{}
+	ok := make(chan struct{})
 	go func() {
 		for d := range msgs {
 			msgsValues = append(msgsValues, fmt.Sprintf("%s", d.Body))
 			log.Printf("Received Message: %s\n", d.Body)
 		}
+		close(ok)
 	}()
+	<-ok
 	log.Println("All messages received.")
 	return &msgsValues, nil
 }
