@@ -24,4 +24,3 @@ rabbitmqServer:
     
 ingress:
   host: ""
-  annotations:
