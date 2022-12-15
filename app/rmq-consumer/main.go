@@ -30,6 +30,7 @@ func main() {
 	flag.Parse()
 	mux := http.NewServeMux()
 	mux.HandleFunc("/consumer", homeHandler)
+	mux.HandleFunc("/healthz", healthHandler)
 	fileServer := http.FileServer(http.Dir("./assets/"))
 	mux.Handle("/consumer/assets/", http.StripPrefix("/consumer/assets", fileServer))
 
@@ -60,6 +61,10 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println(err.Error())
 		http.Error(w, "Internal Server Error", 500)
 	}
+}
+
+func healthHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
 }
 
 func Consume() (*[]string, error) {

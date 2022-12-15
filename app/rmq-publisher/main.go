@@ -27,6 +27,7 @@ func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/publisher", homeHandler)
 	mux.HandleFunc("/publisher/publish", publishHandler)
+	mux.HandleFunc("/healthz", healthHandler)
 	fileServer := http.FileServer(http.Dir("./assets/"))
 	mux.Handle("/publisher/assets/", http.StripPrefix("/publisher/assets", fileServer))
 
@@ -73,6 +74,10 @@ func publishHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		http.Error(w, "Internal Server Error", 500)
 	}
+}
+
+func healthHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
 }
 
 func publish(queueValue, contentValue string) error {

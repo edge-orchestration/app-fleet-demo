@@ -21,7 +21,7 @@ spec:
         - containerPort: 4002  # Should match the port number that the Go application listens on
         readinessProbe:
           httpGet:
-            path: /consumer
+            path: /healthz
             port: 4002
         env:
         - name: RABBITMQ_HOST 
