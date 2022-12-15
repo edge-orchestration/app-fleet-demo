@@ -1,18 +1,22 @@
 targetCustomizations:
 - name: gke
+  clusterSelector:
+    matchLabels:
+      provider: gke
   helm:
     values:
       rabbitmqServer:
         persistence:
           storageClassName: premium-rwo
-  clusterSelector:
-    matchLabels:
-      provider: gke
+      ingress:        
+        annotations:
+          kubernetes.io/ingress.global-static-ip-name: "gke-rmq-static-ip"
 - name: openshift
-  helm:
-    values:
-      ingress:
-        host: rmq-demo.apps.os2.openshift.edge-clusters.net
   clusterSelector:
     matchLabels:
       provider: openshift
+  helm:
+    values:
+      ingress:
+        host: rmq-demo.apps.os2.openshift.edge-clusters.net        
+  
