@@ -15,12 +15,12 @@ rabbitmqServer:
     storageClassName:
     storage: 10Gi
   resources:
-    requests:
-      cpu: 800m
-      memory: 1Gi
     limits:
-      cpu: 800m
-      memory: 1Gi
+      cpu: 200m
+      memory: 500Mi
+    requests:
+      cpu: 200m
+      memory: 500Mi
     
 ingress:
   host: ""
