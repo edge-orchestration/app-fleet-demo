@@ -7,7 +7,7 @@ targetCustomizations:
     values:
       rabbitmqServer:
         persistence:        
-          storage: 2Gi
+          storage: 4Gi
         resources:
           requests:
             cpu: 1200m
