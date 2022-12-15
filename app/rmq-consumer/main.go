@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"os"
 	"text/template"
+
+	"github.com/streadway/amqp"
 )
 
 var (
@@ -27,7 +29,7 @@ func main() {
 	flag.StringVar(&RabbitMq_Pass, "rabbitmq-pass", LookupEnvOrString("RABBITMQ_PASS", RabbitMq_Pass), "RabbitMQ Password")
 	flag.Parse()
 	mux := http.NewServeMux()
-	mux.HandleFunc("/consumer", home)
+	mux.HandleFunc("/consumer", homeHandler)
 	fileServer := http.FileServer(http.Dir("./assets/"))
 	mux.Handle("/consumer/assets/", http.StripPrefix("/consumer/assets", fileServer))
 
@@ -40,21 +42,60 @@ func main() {
 	log.Fatal(err)
 }
 
-func home(w http.ResponseWriter, r *http.Request) {
+func homeHandler(w http.ResponseWriter, r *http.Request) {
 	ts, err := template.ParseFiles("./home.page.tmpl")
 	if err != nil {
 		log.Println(err.Error())
-		http.Error(w, "Internal Server Error: "+err.Error(), 500)
+		http.Error(w, "Internal Server Error", 500)
 		return
 	}
-	if err != nil {
-		http.Error(w, "Internal Server Error: "+err.Error(), 500)
-	}
-	err = ts.Execute(w, &templateData{Messages: nil})
+	msgsValues, err := Consume()
 	if err != nil {
 		log.Println(err.Error())
-		http.Error(w, "Internal Server Error: "+err.Error(), 500)
+		http.Error(w, "Internal Server Error:"+err.Error(), 500)
+		return
 	}
+	err = ts.Execute(w, &templateData{Messages: msgsValues})
+	if err != nil {
+		log.Println(err.Error())
+		http.Error(w, "Internal Server Error", 500)
+	}
+}
+
+func Consume() (*[]string, error) {
+	conn, err := amqp.Dial(RabbitMQInstanceConnectionPath())
+	if err != nil {
+		return nil, err
+	}
+	defer conn.Close()
+
+	ch, err := conn.Channel()
+	if err != nil {
+		return nil, err
+	}
+	defer ch.Close()
+
+	msgs, err := ch.Consume(
+		"TestQueue",
+		"",
+		true,
+		false,
+		false,
+		false,
+		nil,
+	)
+	if err != nil {
+		return nil, err
+	}
+	msgsValues := []string{}
+	go func() {
+		for d := range msgs {
+			msgsValues = append(msgsValues, fmt.Sprintf("%s", d.Body))
+			log.Printf("Received Message: %s\n", d.Body)
+		}
+	}()
+	log.Println("All messages received.")
+	return &msgsValues, nil
 }
 
 func LookupEnvOrString(key string, defaultVal string) string {
@@ -65,5 +106,5 @@ func LookupEnvOrString(key string, defaultVal string) string {
 }
 
 func RabbitMQInstanceConnectionPath() string {
-	return fmt.Sprintf("amqp://%s:%s@%s:%s?heartbeat=30&connection_timeout=120", RabbitMq_User, RabbitMq_Pass, RabbitMq_Host, RabbitMq_Port)
+	return fmt.Sprintf("amqp://%s:%s@%s:%s/", RabbitMq_User, RabbitMq_Pass, RabbitMq_Host, RabbitMq_Port)
 }
