@@ -9,10 +9,3 @@ spec:
     {{ if .Values.rabbitmqServer.persistence.storageClassName }}
     storageClassName: {{ .Values.rabbitmqServer.persistence.storageClassName | quote }}
     {{- end }}
-  resources:
-    requests:
-      cpu: {{ .Values.rabbitmqServer.resources.requests.cpu }}
-      memory: {{ .Values.rabbitmqServer.resources.requests.memory }}
-    limits:
-      cpu: {{ .Values.rabbitmqServer.resources.limits.cpu }}
-      memory: {{ .Values.rabbitmqServer.resources.limits.memory }}
