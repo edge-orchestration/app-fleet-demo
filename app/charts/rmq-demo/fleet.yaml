@@ -8,6 +8,14 @@ targetCustomizations:
       rabbitmqServer:
         persistence:        
           storage: 4Gi
+- name: openshift-clusters
+  clusterSelector:
+    matchLabels:
+      provider: openshift
+  helm:
+    values:
+      ingress:
+        host: rmq-demo.apps.os2.openshift.edge-clusters.net      
 - name: gke-clusters
   clusterSelector:
     matchLabels:
@@ -19,13 +27,5 @@ targetCustomizations:
           storageClassName: premium-rwo
       ingress:        
         annotations:
-          kubernetes.io/ingress.global-static-ip-name: "gke-rmq-static-ip"
-- name: openshift-clusters
-  clusterSelector:
-    matchLabels:
-      provider: openshift
-  helm:
-    values:
-      ingress:
-        host: rmq-demo.apps.os2.openshift.edge-clusters.net        
+          kubernetes.io/ingress.global-static-ip-name: "gke-rmq-static-ip"  
   
