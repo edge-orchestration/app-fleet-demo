@@ -6,6 +6,8 @@ targetCustomizations:
   helm:
     values:
       rabbitmqServer:
+        persistence:        
+          storage: 1Gi
         resources:
           requests:
             memory: 2.5Gi
