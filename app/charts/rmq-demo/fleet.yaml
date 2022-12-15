@@ -16,7 +16,7 @@ targetCustomizations:
     values:
       rabbitmqServer:
         persistence:
-          storageClassName: standard
+          storageClassName: premium-rwo
       ingress:        
         annotations:
           kubernetes.io/ingress.global-static-ip-name: "gke-rmq-static-ip"
