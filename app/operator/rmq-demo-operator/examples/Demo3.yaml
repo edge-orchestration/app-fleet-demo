@@ -1,0 +1,14 @@
+apiVersion: edge-operators.sw.bds.atos.net/v1alpha1
+kind: RmqDemo
+metadata:
+  name: demo-3
+spec:
+  publisher:
+    port: 4001
+    replicas: 1
+  consumer:
+    port: 4002
+    replicas: 1
+  rabbitmq:
+    replicas: 1
+  forceRedeploy: True

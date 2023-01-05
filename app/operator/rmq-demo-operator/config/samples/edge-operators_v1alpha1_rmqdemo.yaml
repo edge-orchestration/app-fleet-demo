@@ -1,0 +1,12 @@
+apiVersion: edge-operators.sw.bds.atos.net/v1alpha1
+kind: RmqDemo
+metadata:
+  labels:
+    app.kubernetes.io/name: rmqdemo
+    app.kubernetes.io/instance: rmqdemo-sample
+    app.kubernetes.io/part-of: rmq-demo-operator
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: rmq-demo-operator
+  name: rmqdemo-sample
+spec:
+  # TODO(user): Add fields here
